@@ -2,18 +2,15 @@
 
 const { Client } = require('pg');
 const fs = require("fs");
-const groupsSqlInsert = fs.readFileSync("seedGroups.sql").toString();
-const userGroupsSqlInsert = fs.readFileSync("seedUserGroups.sql").toString();
-const usersSqlInsert = fs.readFileSync("seedUsers.sql").toString();
-const salesSqlInsert = fs.readFileSync("seedSales.sql").toString();
+const path = require('path');
+const config = require('../config/db.config');
 
-const pgclient = new Client({
-  host: 'db',
-  port: '5432',
-  user: 'user',
-  password: 'pass',
-  database: 'actifai'
-});
+const groupsSqlInsert = fs.readFileSync(path.join(__dirname, "seedGroups.sql")).toString();
+const userGroupsSqlInsert = fs.readFileSync(path.join(__dirname, "seedUserGroups.sql")).toString();
+const usersSqlInsert = fs.readFileSync(path.join(__dirname, "seedUsers.sql")).toString();
+const salesSqlInsert = fs.readFileSync(path.join(__dirname, "seedSales.sql")).toString();
+
+const pgclient = new Client(config.connectionString);
 
 pgclient.connect();
 
@@ -51,7 +48,7 @@ const createSalesTableQuery = `
 	    PRIMARY KEY ("id")
     );`;
 
-const seedDatabase = async function() {
+const seedDatabase = async function () {
 
   const usersTableExistsResult = await pgclient.query("SELECT EXISTS (SELECT FROM pg_tables WHERE schemaname = 'public' AND tablename = 'users');");
   const usersTableExists = usersTableExistsResult.rows[0].exists;

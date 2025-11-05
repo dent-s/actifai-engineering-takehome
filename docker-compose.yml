@@ -20,5 +20,10 @@ services:
       - db
     ports:
       - '3000:3000'
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: actifai
+      DB_HOST: db
     volumes:
       - ./:/usr/src/app
